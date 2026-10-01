@@ -1,0 +1,190 @@
+    /* ========== 明暗主题（页内自持，与选集页一致）========== */
+    :root {
+        --bg: #f5f6f7; --card: #fff; --card-shadow: rgba(0,0,0,.06);
+        --text: #1a1a1a; --text-light: #888; --text-muted: #aaa;
+        --border: #eee; --border-h2: #e8e8e8;
+        --primary: #1f6feb; --primary-dark: #1756b8; --tag-bg: #f0f1f3;
+        --playon: var(--primary);
+    }
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #0d1117; --card: #161b22; --card-shadow: rgba(0,0,0,.4);
+            --text: #e6edf3; --text-light: #8b949e; --text-muted: #656c76;
+            --border: #30363d; --border-h2: #30363d;
+            --primary: #1f6feb; --primary-dark: #388bfd; --tag-bg: #21262d;
+            --playon: #388bfd;
+        }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg); color: var(--text);
+        min-height: 100vh; padding: 14px; line-height: 1.6;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .page-head { text-align: center; padding: 12px 0 10px; }
+    .page-head .avatar { width: 44px; height: 44px; border-radius: 50%; margin-bottom: 4px; }
+    .page-head h1 { font-size: 1.2rem; font-weight: 600; }
+    .page-head .tagline { font-size: .8rem; color: var(--text-light); }
+
+    /* 播放器 */
+    .player-area {
+        background: var(--card); border-radius: 14px; overflow: hidden;
+        box-shadow: 0 2px 14px var(--card-shadow);
+        margin-bottom: 18px; border: 1px solid var(--border);
+    }
+    .player-area video {
+        width: 100%; aspect-ratio: 16/9; display: block; background: #000;
+        border-radius: 14px 14px 0 0; outline: none;
+    }
+    .player-bar {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 18px; flex-wrap: wrap; gap: 8px;
+    }
+    .now-playing { font-size: .95rem; font-weight: 500; }
+    .now-playing .ep-num { color: var(--primary); font-weight: 700; }
+    .player-actions { display: flex; gap: 8px; }
+    .player-actions a,
+    .player-actions button {
+        padding: 6px 14px; border-radius: 8px; font-size: .82rem;
+        border: 1px solid var(--border); background: var(--tag-bg);
+        color: var(--text); cursor: pointer; text-decoration: none; transition: all .2s;
+    }
+    .player-actions .next-btn { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .player-actions .next-btn:hover { background: var(--primary-dark); }
+    .player-actions a:hover { border-color: var(--primary); }
+
+    /* ===== 选集区（头部：源 → 折叠下拉）===== */
+    .eps-wrap {
+        background: var(--card); border-radius: 14px; padding: 16px 18px;
+        border: 1px solid var(--border); box-shadow: 0 2px 14px var(--card-shadow);
+    }
+    .eps-head {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 14px; padding-bottom: 8px;
+        border-bottom: 2px solid var(--border-h2);
+        flex-wrap: wrap; gap: 8px;
+    }
+    .eps-head h2 { font-size: 1.05rem; font-weight: 600; }
+
+    /* 折叠源选择器 —— 仿樱花 .module-tab-name */
+    .source-dropdown {
+        position: relative;
+    }
+    .source-trigger {
+        display: flex; align-items: center; gap: 4px;
+        padding: 3px 12px; border-radius: 20px; font-size: .8rem;
+        border: 1px solid var(--border); background: var(--tag-bg);
+        color: var(--text-light); cursor: pointer; user-select: none;
+        transition: all .2s;
+    }
+    .source-trigger:hover { border-color: var(--primary); color: var(--text); }
+    .source-trigger .arrow { transition: transform .2s; font-size: .7rem; }
+    .source-dropdown.open .source-trigger .arrow { transform: rotate(180deg); }
+
+    .source-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        box-shadow: 0 6px 20px var(--card-shadow);
+        min-width: 120px;
+        z-index: 20;
+        overflow: hidden;
+    }
+    .source-dropdown.open .source-menu { display: block; }
+
+    .source-item {
+        padding: 8px 14px;
+        font-size: .82rem;
+        color: var(--text);
+        cursor: pointer;
+        transition: background .15s;
+        white-space: nowrap;
+    }
+    .source-item:hover { background: var(--tag-bg); }
+    .source-item.active {
+        background: var(--primary);
+        color: #fff;
+    }
+
+    .ep-scroll { max-height: 420px; overflow-y: auto; padding-right: 4px; }
+    .ep-scroll::-webkit-scrollbar { width: 5px; }
+    .ep-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .ep-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+
+    /* ===== ep-btn + playon 修正：四条竖线锚在按键底部向上 ===== */
+    .ep-btn {
+        position: relative;
+        padding: 8px 0 14px;          /* 底部多留 6px 给 playon */
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--tag-bg);
+        color: var(--text);
+        text-align: center;
+        font-size: .85rem;
+        cursor: pointer;
+        transition: all .2s;
+        font-weight: 500;
+    }
+    .ep-btn:hover { border-color: var(--primary); }
+    .ep-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    /*
+     * playon：绝对定位在按键底部，flex-end 让子项从底往上堆
+     * 四条 i 从 height:3px → 12px，底部锚定 = 看起来从按钮底边向上冒
+     */
+    .ep-btn .playon { display: none; }
+    .ep-btn.active .playon {
+        display: flex;
+        align-items: flex-end;       /* ★ 关键：从底对齐 */
+        justify-content: center;
+        gap: 2px;
+        position: absolute;
+        bottom: 3px;                 /* ★ 锚在按键底边 */
+        left: 0;
+        right: 0;
+        height: 14px;                /* 给 i 最大 12px + 一点余量 */
+    }
+    .ep-btn.active .playon i {
+        display: inline-block;
+        width: 3px;
+        height: 4px;                 /* 起始高度（底部锚定） */
+        background: #fff;
+        border-radius: 2px;
+        animation: barUp .8s ease-in-out infinite alternate;
+    }
+    .ep-btn.active .playon i:nth-child(2) { animation-delay: .15s; }
+    .ep-btn.active .playon i:nth-child(3) { animation-delay: .3s; }
+    .ep-btn.active .playon i:nth-child(4) { animation-delay: .45s; }
+
+    /* ★ 从 4px → 12px 往上长，视觉就是"从按键底边向上冒" */
+    @keyframes barUp {
+        0%   { height: 4px; }
+        100% { height: 12px; }
+    }
+
+    .bar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; margin-bottom: 20px; }
+    .bar a {
+        flex: 1; min-width: 100px; text-align: center; padding: 10px 0;
+        border-radius: 8px; background: var(--tag-bg); color: var(--text);
+        font-size: .88rem; border: 1px solid var(--border); text-decoration: none;
+        transition: background .2s;
+    }
+    .bar a:hover { background: var(--border); }
+    .bar .dl { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .bar .dl:hover { background: var(--primary-dark); }
+
+    footer { text-align: center; font-size: .78rem; color: var(--text-muted); padding-bottom: 16px; }
+
+    @media (max-width:720px) { .ep-grid { grid-template-columns: repeat(4,1fr); } }
+    @media (max-width:420px) {
+        .ep-grid { grid-template-columns: repeat(3,1fr); }
+        .player-bar { flex-direction: column; align-items: flex-start; }
+    }

@@ -1,7 +1,7 @@
 /* 在页面右上角显示实时时间，格式：年.月.日.时：分：秒 */
 document.addEventListener('DOMContentLoaded', function () {
   const clock = document.createElement('div');
-  clock.id = 'clock';
+  clock.id = 'time';
   document.body.appendChild(clock);
 
   function pad(n) {

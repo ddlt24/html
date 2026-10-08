@@ -83,12 +83,16 @@ body {
 /* ===== 头部 ===== */
 header { text-align: center; margin-bottom: 20px; }
 .avatar {
-  width: 64px; height: 64px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 8px;
   box-shadow: var(--glass-shadow);
-}
+  margin-bottom: 0;
+  display: block;}
+header a {
+  display: block;
+  width: 64px;
+  margin: 0 auto;}
 header h1 { font-size: 1.6rem; margin-bottom: 2px; }
 .tagline { color: var(--text-light); font-size: 1rem; }
 
